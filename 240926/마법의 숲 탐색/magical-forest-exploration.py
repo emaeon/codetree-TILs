@@ -26,7 +26,7 @@ def bfs(si,sj):
         mx_i = max(mx_i, ci)
 
 
-        # 네방향, 미방문, 조건 : 같은 값 또는 내가 출구 - 상대방이 골렘
+        # 네방향, 미방문, 조건 : 같은 값(골램내부) 또는 이동전 좌표가 내 출구좌표 그리고 이동후 좌표가 골렘
         for di,dj in ((-1,0),(1,0),(0,-1),(0,1)) :
             ni,nj = ci+di, cj+dj
             if not v[ni][nj] and ((arr[ci][cj] == arr[ni][nj]) or ((ci,cj) in exit_set and arr[ni][nj] > 1)):
@@ -46,18 +46,21 @@ for cj, dr in unit:
         # 남쪽
         if (arr[ci + 1][cj - 1] + arr[ci + 2][cj] + arr[ci + 1][cj + 1]) == 0:  # 비어있음
             ci += 1
-            # 서족으로 회전하면서 아래로 한칸
+
+        # 서쪽으로 회전하면서 아래로 한칸
         elif (arr[ci - 1][cj - 1] + arr[ci][cj - 2] + arr[ci + 1][cj - 1] + arr[ci + 1][cj - 2] + arr[ci + 2][
             cj - 1]) == 0:  # 비어있음
-            ci += 1
-            cj -= 1
+            ci += 1 #아래
+            cj -= 1 #왼
             dr = (dr - 1) % 4
+
         # 동쪽으로 회전하면서 아래로 한칸
         elif (arr[ci - 1][cj + 1] + arr[ci][cj + 2] + arr[ci + 1][cj + 1] + arr[ci + 1][cj + 2] + arr[ci + 2][
             cj + 1]) == 0:  # 비어있음
-            ci += 1
-            cj += 1
+            ci += 1 #아래
+            cj += 1 #우
             dr = (dr + 1) % 4
+            
         else:
             break
 
@@ -73,7 +76,9 @@ for cj, dr in unit:
         arr[ci][cj - 1:cj + 2] = [num] * 3
         num += 1
 
-        exit_set.add((ci+di[dr], cj+dj[dr]))
+        #출구
+        exit_set.add((ci+di[dr], cj+dj[dr])) #행(가운데) + 출구번호, 열(가운데)+출구변호
+
         #남쪽으로 가기
         ans += bfs(ci,cj)
 
